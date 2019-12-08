@@ -97,6 +97,18 @@ class TestTimeConversionFormats:
         )
         tm.assert_series_equal(result, expected)
 
+        # with None value
+        # GH 3011
+        s = Series(['20121231', '20141231', None])
+        result = pd.to_datetime(s, format="%Y%m%d", cache=cache)
+        expected = Series([Timestamp('20121231'), Timestamp('20141231'), Timestamp(None)])
+        tm.assert_series_equal(result, expected)
+
+        s = Series([20121231, 20141231, None])
+        result = pd.to_datetime(s, format="%Y%m%d", cache=cache)
+        expected = Series([Timestamp('20121231'), Timestamp('20141231'), Timestamp(None)])
+        tm.assert_series_equal(result, expected)
+
         result = pd.to_datetime(s, format="%Y%m%d", errors="coerce", cache=cache)
         expected = Series(["20121231", "20141231", "NaT"], dtype="M8[ns]")
         tm.assert_series_equal(result, expected)

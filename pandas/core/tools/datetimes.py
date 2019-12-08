@@ -886,7 +886,7 @@ def _attempt_YYYYMMDD(arg, errors):
     # try intlike / strings that are ints
     try:
         return calc(arg.astype(np.int64))
-    except (ValueError, OverflowError):
+    except (ValueError, OverflowError, TypeError):
         pass
 
     # a float with actual np.nan
@@ -898,7 +898,7 @@ def _attempt_YYYYMMDD(arg, errors):
 
     # string with NaN-like
     try:
-        mask = ~algorithms.isin(arg, list(tslib.nat_strings))
+        mask = ~algorithms.isin(arg, list(tslib.nat_strings) + [None])
         return calc_with_mask(arg, mask)
     except (ValueError, OverflowError):
         pass
